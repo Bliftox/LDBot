@@ -1,4 +1,16 @@
 name: SBBot
 version: '${project.version}'
-main: org.ling.sbbot.SBBot
+main: org.ling.sbbot.main.SBBot
 api-version: '1.20'
+
+commands:
+  sbbot:
+    description: "general command"
+    permission: "sbbot.*"
+    aliases: []
+    children:
+      sbbot.reload: true
+
+permissions:
+  sbbot.reload:
+    default: op

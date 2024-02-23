@@ -1,7 +1,7 @@
-package org.locfox.discord_spigot_integration.spigot.commands;
+package org.ling.sbbot.minecraft.commands;
 
 import org.bukkit.command.*;
-import org.locfox.discord_spigot_integration.spigot.DiscordSpigotIntegration;
+import org.ling.sbbot.main.SBBot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public abstract class AbstractCommands implements CommandExecutor, TabCompleter 
     // обработчик команд
 
     public AbstractCommands(String command) {
-        PluginCommand pluginCommand = DiscordSpigotIntegration.getInstance().getCommand(command);
+        PluginCommand pluginCommand = SBBot.getInstance().getCommand(command);
         if (pluginCommand != null) {
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);

@@ -1,10 +1,13 @@
-package org.ling.sbbot;
+package org.ling.sbbot.main;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ling.sbbot.discord.DiscordCommands;
+import org.ling.sbbot.discord.suggest.Suggest;
+import org.ling.sbbot.minecraft.commands.MinecraftReloadCommand;
 
 public final class SBBot extends JavaPlugin {
     private JDA jda;
@@ -15,9 +18,20 @@ public final class SBBot extends JavaPlugin {
         return instance;
     }
 
+    public JDA getJda() {
+        return jda;
+    }
+
     @Override
     public void onEnable() {
         instance = this;
+        saveDefaultConfig();
+        startBot();
+
+        new MinecraftReloadCommand(this);
+    }
+
+    public void startBot() {
         try {
             jda = JDABuilder.createDefault(getConfig().getString("token"))
                     .enableIntents(
@@ -27,6 +41,10 @@ public final class SBBot extends JavaPlugin {
                             GatewayIntent.GUILD_MEMBERS,
                             GatewayIntent.GUILD_WEBHOOKS)
 
+                    .addEventListeners(new Suggest(this))
+                    .addEventListeners(new DiscordCommands(this))
+                    .addEventListeners(new DiscordReloadCommand(this))
+
                     .build();
         } catch (IllegalArgumentException e) {
             Bukkit.getLogger().warning("Change the token to yours in the config!");
@@ -34,7 +52,6 @@ public final class SBBot extends JavaPlugin {
             Bukkit.getLogger().warning("It seems that your bot did not start( \nBe sure to report this issue to the developer!");
             e.printStackTrace();
         }
-
     }
 
     @Override
