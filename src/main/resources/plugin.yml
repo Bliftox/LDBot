@@ -1,0 +1,4 @@
+name: SBBot
+version: '${project.version}'
+main: org.ling.sbbot.SBBot
+api-version: '1.20'
