@@ -1,22 +1,18 @@
 package org.ling.sbbot.discord.applications.result;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.ling.sbbot.discord.applications.Application;
 import org.ling.sbbot.main.SBBot;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.Objects;
 
 public class ApplicationAccept extends ListenerAdapter {
     private final SBBot plugin;
@@ -27,74 +23,61 @@ public class ApplicationAccept extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        // В кнопку передается айди игрока
         if (event.getButton().getLabel().equals(Application.getButtonAcceptLabel())) {
             final String id = event.getButton().getId();
-            
-           // event.reply(id).setEphemeral(true).queue();
-
             TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.acceptChannelId"));
 
-            EmbedBuilder acceptEmbed = new EmbedBuilder()
-                    .setColor(Color.decode("#00e600"))
-                    .setTitle("✅ Принят")
-                    .setTimestamp(Instant.now());
+            sendMessageAndEmbed(id, textChannel);
 
-            textChannel.sendMessage("<@" + id + ">").setEmbeds(acceptEmbed.build()).queue();
+            whitelistPlayer(id);
+            changeNickname(event, id);
+            manageRoles(event, id);
 
-
-
-
-
-            /*Bukkit.getLogger().warning(
-                    plugin.getJda().getUserById(id).getName()
-                            + " " +
-                            plugin.getJda().getUserById(event.getButton().getId())
-                                    .getGlobalName());*/
-
-            // Добавление в вайтлист
-            plugin.getServer().getScheduler().callSyncMethod(SBBot.getInstance(), () -> Bukkit.dispatchCommand(
-                    Bukkit.getConsoleSender(),
-                    "whitelist add " +
-                            plugin.getJda().getUserById(
-                                            event.getButton().getId())
-                                    .getGlobalName()));
-
-
-
-
-            // Смена имени игроку в дискорд на прежнее
-            if (plugin.getJda().getUserById(id) != null) {
-                String userDefaultName = plugin.getJda().getUserById(id).getName();
-                event.getGuild().getMemberById(id).modifyNickname(userDefaultName).queue();
-            } else {
-                // Обработка случая, когда пользователь не найден
-                Bukkit.getLogger().warning("User not found.");
-            }
-
-
-            try {
-                if (plugin.getConfig().getStringList("applications.addAcceptRolesIds") != null || !plugin.getConfig().getStringList("applications.addAcceptRolesIds").isEmpty()) {
-                    for (String roleId : plugin.getConfig().getStringList("applications.addAcceptRolesIds")) {
-                        event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
-                    }
-                }
-            } catch (HierarchyException e) {
-                Bukkit.getLogger().warning("Cannot change user role higher than bot");
-            }
-
-            try {
-                if (plugin.getConfig().getStringList("applications.removeAcceptRolesIds") != null || !plugin.getConfig().getStringList("applications.removeAcceptRolesIds").isEmpty()) {
-                    for (String roleId : plugin.getConfig().getStringList("applications.removeAcceptRolesIds")) {
-                        event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
-                    }
-                }
-            } catch (HierarchyException e) {
-                Bukkit.getLogger().warning("Cannot change user role higher than bot");
-            }
-
-            event.getMessage().delete();
-            Bukkit.getLogger().info("[SBBot] The application from " + event.getGuild().getMemberById(id).getNickname() + "has been successfully accepted.");
+            event.getMessage().delete().queue();
+            Bukkit.getLogger().info("[SBBot] The application from " + event.getGuild().getMemberById(id).getEffectiveName() + " has been successfully accepted.");
         }
+    }
+
+    private void sendMessageAndEmbed(String id, TextChannel textChannel) {
+        EmbedBuilder acceptEmbed = new EmbedBuilder()
+                .setColor(Color.decode("#00e600"))
+                .setTitle("✅ Принят")
+                .setTimestamp(Instant.now());
+        textChannel.sendMessage("<@" + id + ">").setEmbeds(acceptEmbed.build()).queue();
+    }
+
+    private void whitelistPlayer(String id) {
+        Bukkit.getServer().getScheduler().callSyncMethod(SBBot.getInstance(), () -> Bukkit.dispatchCommand(
+                Bukkit.getConsoleSender(),
+                "whitelist add " +
+                        plugin.getJda().getUserById(id).getGlobalName()));
+    }
+
+    private void changeNickname(ButtonInteractionEvent event, String id) {
+        String userDefaultName = plugin.getJda().getUserById(id).getName();
+        try {
+            event.getGuild().getMemberById(id).modifyNickname(userDefaultName).queue();
+        } catch (HierarchyException e) {
+            Bukkit.getLogger().warning("Cannot change user role higher than bot");
+        }
+
+    }
+
+    private void manageRoles(ButtonInteractionEvent event, String id) {
+        plugin.getConfig().getStringList("applications.addAcceptRolesIds").forEach(roleId -> {
+            try {
+                event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
+            } catch (HierarchyException e) {
+                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            }
+        });
+
+        plugin.getConfig().getStringList("applications.removeAcceptRolesIds").forEach(roleId -> {
+            try {
+                event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
+            } catch (HierarchyException e) {
+                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            }
+        });
     }
 }
