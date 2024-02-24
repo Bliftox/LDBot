@@ -1,9 +1,12 @@
 package org.ling.sbbot.discord.applications.result;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.ling.sbbot.discord.applications.Application;
 import org.ling.sbbot.main.SBBot;
@@ -21,23 +24,52 @@ public class ApplicationReject extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getButton().getLabel().equals(Application.getButtonRejectLabel())) {
-            String id = String.valueOf(Long.valueOf(event.getButton().getId()) - 1);
-
-
+            final String id = String.valueOf(Long.valueOf(event.getButton().getId()) - 1);
             TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.rejectChannelId"));
 
-            EmbedBuilder rejectEmbed = new EmbedBuilder()
-                    .setColor(Color.decode("#ff0000"))
+            sendMessageAndEmbed(id, textChannel);
 
-                    .setTitle("⛔ Отклонено")
+            changeNickname(event, id);
+            manageRoles(event, id);
 
-                    .setTimestamp(Instant.now());
-
-            textChannel.sendMessage("<@" + id + ">").setEmbeds(rejectEmbed.build()).queue();
-
-            //event.reply(event.getMessage().getEmbeds().get(0).toString()).setEphemeral(true).queue();
-            //plugin.getServer().getWhitelistedPlayers().
-            //Bukkit.getOfflinePlayer().setWhitelisted(true);
+            //event.getMessage().delete().queue();
+            Bukkit.getLogger().info("[SBBot] The application from " + event.getGuild().getMemberById(id).getEffectiveName() + " has been successfully rejected.");
         }
+    }
+
+    private void sendMessageAndEmbed(String id, TextChannel textChannel) {
+        EmbedBuilder rejectEmbed = new EmbedBuilder()
+                .setColor(Color.decode("#e60000"))
+                .setTitle("⛔ Отказано")
+                .setTimestamp(Instant.now());
+        textChannel.sendMessage("<@" + id + ">").setEmbeds(rejectEmbed.build()).queue();
+    }
+
+    private void changeNickname(ButtonInteractionEvent event, String id) {
+        String userDefaultName = plugin.getJda().getUserById(id).getName();
+        try {
+            event.getGuild().getMemberById(id).modifyNickname(userDefaultName).queue();
+        } catch (HierarchyException e) {
+            Bukkit.getLogger().warning("Cannot change user role higher than bot");
+        }
+
+    }
+
+    private void manageRoles(ButtonInteractionEvent event, String id) {
+        plugin.getConfig().getStringList("applications.addRejectRolesIds").forEach(roleId -> {
+            try {
+                event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
+            } catch (HierarchyException e) {
+                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            }
+        });
+
+        plugin.getConfig().getStringList("applications.removeRejectRolesIds").forEach(roleId -> {
+            try {
+                event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
+            } catch (HierarchyException e) {
+                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            }
+        });
     }
 }

@@ -57,7 +57,7 @@ public final class SBBot extends JavaPlugin {
                     .addEventListeners(new DiscordReloadCommand(this))
                     .addEventListeners(new Application(this))
                     .addEventListeners(new ApplicationAccept(this))
-                    // .addEventListeners(new ApplicationReject(this))
+                    .addEventListeners(new ApplicationReject(this))
                     // .addEventListeners(new GlobalChat(this))
                     .build();
         } catch (IllegalArgumentException e) {

@@ -54,13 +54,14 @@ public class ApplicationAccept extends ListenerAdapter {
     }
 
     private void changeNickname(ButtonInteractionEvent event, String id) {
-        String userDefaultName = plugin.getJda().getUserById(id).getName();
-        try {
-            event.getGuild().getMemberById(id).modifyNickname(userDefaultName).queue();
-        } catch (HierarchyException e) {
-            Bukkit.getLogger().warning("Cannot change user role higher than bot");
+        if (!plugin.getConfig().getBoolean("applications.changeNickname")) {
+            String userDefaultName = plugin.getJda().getUserById(id).getName();
+            try {
+                event.getGuild().getMemberById(id).modifyNickname(userDefaultName).queue();
+            } catch (HierarchyException e) {
+                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            }
         }
-
     }
 
     private void manageRoles(ButtonInteractionEvent event, String id) {
