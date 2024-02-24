@@ -12,10 +12,18 @@ applications:
 
   changeNickname: false
 
-  acceptRolesIds:
+
+  addAcceptRolesIds:
     - "1199432037011042345"
     - "1199432047849132166"
 
-  rejectRolesIds:
+  removeAcceptRolesIds:
+    - "1199432050814488657"
+
+
+  addRejectRolesIds:
     - "1199432046515322980"
     - "1199432049191293090"
+
+  removeRejectRolesIds:
+    - "1199432050814488657"

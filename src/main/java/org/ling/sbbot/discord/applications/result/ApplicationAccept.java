@@ -74,8 +74,8 @@ public class ApplicationAccept extends ListenerAdapter {
 
 
             try {
-                if (plugin.getConfig().getStringList("applications.acceptRoles") != null || !plugin.getConfig().getStringList("applications.acceptRoles").isEmpty()) {
-                    for (String roleId : plugin.getConfig().getStringList("applications.acceptRolesIds")) {
+                if (plugin.getConfig().getStringList("applications.addAcceptRolesIds") != null || !plugin.getConfig().getStringList("applications.addAcceptRolesIds").isEmpty()) {
+                    for (String roleId : plugin.getConfig().getStringList("applications.addAcceptRolesIds")) {
                         event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
                     }
                 }
@@ -83,6 +83,17 @@ public class ApplicationAccept extends ListenerAdapter {
                 Bukkit.getLogger().warning("Cannot change user role higher than bot");
             }
 
+            try {
+                if (plugin.getConfig().getStringList("applications.removeAcceptRolesIds") != null || !plugin.getConfig().getStringList("applications.removeAcceptRolesIds").isEmpty()) {
+                    for (String roleId : plugin.getConfig().getStringList("applications.removeAcceptRolesIds")) {
+                        event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
+                    }
+                }
+            } catch (HierarchyException e) {
+                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            }
+
+            event.getMessage().delete();
             Bukkit.getLogger().info("[SBBot] The application from " + event.getGuild().getMemberById(id).getNickname() + "has been successfully accepted.");
         }
     }
