@@ -120,7 +120,6 @@ public class Application extends ListenerAdapter {
         if (event.getModalId().equals(getApplicationModalId())) {
 
             EmbedBuilder applicationEmbed = new EmbedBuilder()
-                    .setTitle("## [📋] Заявка от " + event.getUser().getName())
 
                     /*.addField("### [🎗️] Ваш ник в игре", "```text\n" + event.getValue(getFieldOneId()).getAsString() + "\n```", false)
                     .addField("### [🎨] Сколько вам лет?", "```text\n" + event.getValue(getFieldTwoId()).getAsString() + "\n```", false)
@@ -129,6 +128,7 @@ public class Application extends ListenerAdapter {
                     .addField("### [⚠️] Любите играть с читами?", "```text\n" + event.getValue(getFieldFiveId()).getAsString() + "\n```", false)*/
 
                     .setDescription(
+                            "## [📋] Заявка от " + event.getUser().getName() + "\n" +
                             "### 🎗️ Ваш ник в игре" + "\n```text\n" + event.getValue(getFieldOneId()).getAsString() + "\n```" +
                             "\n\n### 🎨 Сколько вам лет?" + "\n```text\n" + event.getValue(getFieldTwoId()).getAsString() + "\n```" +
                             "\n\n### 📜 Немного о себе" + "\n```text\n" + event.getValue(getFieldThreeId()).getAsString() + "\n```" +
