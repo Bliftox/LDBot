@@ -1,4 +1,21 @@
-token: ""
+token: "MTIxMDU3MTc3MjY1NTgzNzIyNg.GYOSAV.22ex6khM6MgLVOFTvuSkupeSkFy0PqXs2NQJGE"
 
-suggestChannelId: ""
+suggestChannelId: "1197957820562296895"
 
+globalChannelId: "1197957820562296895"
+
+applications:
+  channelId: "1197957820562296895"
+
+  acceptChannelId: "1197957820562296895"
+  rejectChannelId: "1197957820562296895"
+
+  changeNickname: false
+
+  acceptRolesIds:
+    - "1199432037011042345"
+    - "1199432047849132166"
+
+  rejectRolesIds:
+    - "1199432046515322980"
+    - "1199432049191293090"

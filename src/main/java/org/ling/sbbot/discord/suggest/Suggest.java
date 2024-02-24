@@ -1,5 +1,6 @@
 package org.ling.sbbot.discord.suggest;
 
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -10,12 +11,12 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.ling.sbbot.discord.DiscordCommands;
 import org.ling.sbbot.main.SBBot;
 
 import java.awt.*;
+import java.time.Instant;
 
 public class Suggest extends ListenerAdapter {
 
@@ -69,16 +70,17 @@ public class Suggest extends ListenerAdapter {
             TextChannel suggestChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("suggestChannelId"));
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setColor(Color.decode("#58b9ff"))
-                    .setTitle(event.getValue(getSuggestTitleId()).getAsString())
-                    .setDescription("```text\n" + event.getValue(getSuggestTextId()).getAsString() + "\n```");
+                    .setTimestamp(Instant.now())
+                    .setColor(Color.decode("#0099ff"))
+                    .setTitle("[💡] Предложение от - " + event.getUser().getName())
+                    .setDescription(event.getValue(getSuggestTitleId()).getAsString() + "\n```text\n" + event.getValue(getSuggestTextId()).getAsString() + "\n```");
 
 
-            suggestChannel.sendMessage("").setEmbeds(embedBuilder.build()).queue(sentMessage -> {
+            suggestChannel.sendMessage("").setEmbeds(embedBuilder.build()).queue(message -> {
                 // Добавление реакции к сообщению
-                sentMessage.createThreadChannel("Обсуждение: " + event.getValue(getSuggestTitleId()).getAsString()).queue();
-                sentMessage.addReaction(Emoji.fromUnicode("👍")).queue();
-                sentMessage.addReaction(Emoji.fromUnicode("👎")).queue();
+                message.createThreadChannel("Обсуждение: " + event.getValue(getSuggestTitleId()).getAsString()).queue();
+                message.addReaction(Emoji.fromUnicode("👍")).queue();
+                message.addReaction(Emoji.fromUnicode("👎")).queue();
             }, throwable -> {
                 // Обработка ошибки, если что-то пошло не так
                 throwable.printStackTrace();

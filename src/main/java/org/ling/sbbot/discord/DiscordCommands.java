@@ -27,6 +27,10 @@ public class DiscordCommands extends ListenerAdapter {
         return "reload";
     }
 
+    public static final String getResumeCommandId() {
+        return "resume";
+    }
+
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
         List<CommandData> commandDataList = new ArrayList<>();
@@ -34,6 +38,7 @@ public class DiscordCommands extends ListenerAdapter {
 
         commandDataList.add(Commands.slash(getReloadCommandId(), "Reload plugin"));
 
+        commandDataList.add(Commands.slash(getResumeCommandId(), "Set resume"));
 
         event.getGuild().updateCommands().addCommands(commandDataList).queue();
         for (CommandData commandData : commandDataList) {
