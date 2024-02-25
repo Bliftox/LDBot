@@ -1,7 +1,6 @@
-package org.ling.sbbot.discord.applications;
+package org.ling.ldbot.discord.applications;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -17,8 +16,8 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import org.ling.sbbot.discord.DiscordCommands;
-import org.ling.sbbot.main.SBBot;
+import org.ling.ldbot.discord.DiscordCommands;
+import org.ling.ldbot.main.LDBot;
 
 import java.awt.*;
 import java.time.Instant;
@@ -26,9 +25,9 @@ import java.util.Objects;
 
 public class Application extends ListenerAdapter {
 
-    private final SBBot plugin;
+    private final LDBot plugin;
 
-    public Application(SBBot plugin) {
+    public Application(LDBot plugin) {
         this.plugin = plugin;
     }
 

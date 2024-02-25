@@ -1,4 +1,4 @@
-package org.ling.sbbot.discord.suggest;
+package org.ling.ldbot.discord.suggest;
 
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -13,8 +13,8 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import org.ling.sbbot.discord.DiscordCommands;
-import org.ling.sbbot.main.SBBot;
+import org.ling.ldbot.discord.DiscordCommands;
+import org.ling.ldbot.main.LDBot;
 
 import java.awt.*;
 import java.time.Instant;
@@ -22,9 +22,9 @@ import java.util.Objects;
 
 public class Suggest extends ListenerAdapter {
 
-    private final SBBot plugin;
+    private final LDBot plugin;
 
-    public Suggest(SBBot plugin) {
+    public Suggest(LDBot plugin) {
         this.plugin = plugin;
     }
 

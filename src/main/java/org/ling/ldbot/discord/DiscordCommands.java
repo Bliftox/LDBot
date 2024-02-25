@@ -1,21 +1,20 @@
-package org.ling.sbbot.discord;
+package org.ling.ldbot.discord;
 
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.jetbrains.annotations.NotNull;
-import org.ling.sbbot.main.SBBot;
+import org.ling.ldbot.main.LDBot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DiscordCommands extends ListenerAdapter {
 
-    private final SBBot plugin;
+    private final LDBot plugin;
 
-    public DiscordCommands(SBBot plugin) {
+    public DiscordCommands(LDBot plugin) {
         this.plugin = plugin;
     }
 

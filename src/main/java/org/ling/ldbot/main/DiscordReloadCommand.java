@@ -1,16 +1,16 @@
-package org.ling.sbbot.main;
+package org.ling.ldbot.main;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import org.ling.sbbot.discord.DiscordCommands;
+import org.ling.ldbot.discord.DiscordCommands;
 
 public class DiscordReloadCommand extends ListenerAdapter {
 
-    private final SBBot plugin;
+    private final LDBot plugin;
 
-    public DiscordReloadCommand(SBBot plugin) {
+    public DiscordReloadCommand(LDBot plugin) {
         this.plugin = plugin;
     }
 
@@ -20,8 +20,8 @@ public class DiscordReloadCommand extends ListenerAdapter {
         if (event.getName().equals(DiscordCommands.getReloadCommandId())) {
             event.reply("✅ Successfully reload Bot!").setEphemeral(true).queue();
             plugin.getJda().shutdown();
-            SBBot.getInstance().reloadConfig();
-            Bukkit.getScheduler().cancelTasks(SBBot.getInstance());
+            LDBot.getInstance().reloadConfig();
+            Bukkit.getScheduler().cancelTasks(LDBot.getInstance());
             plugin.startBot();
         }
     }

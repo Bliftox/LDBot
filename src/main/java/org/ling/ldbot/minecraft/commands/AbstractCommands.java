@@ -1,7 +1,7 @@
-package org.ling.sbbot.minecraft.commands;
+package org.ling.ldbot.minecraft.commands;
 
 import org.bukkit.command.*;
-import org.ling.sbbot.main.SBBot;
+import org.ling.ldbot.main.LDBot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public abstract class AbstractCommands implements CommandExecutor, TabCompleter 
     // обработчик команд
 
     public AbstractCommands(String command) {
-        PluginCommand pluginCommand = SBBot.getInstance().getCommand(command);
+        PluginCommand pluginCommand = LDBot.getInstance().getCommand(command);
         if (pluginCommand != null) {
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);

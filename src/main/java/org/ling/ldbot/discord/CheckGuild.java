@@ -1,19 +1,16 @@
-package org.ling.sbbot.discord;
+package org.ling.ldbot.discord;
 
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import org.ling.sbbot.main.SBBot;
-
-import java.util.List;
+import org.ling.ldbot.main.LDBot;
 
 public class CheckGuild  extends ListenerAdapter {
 
-    private final SBBot plugin;
+    private final LDBot plugin;
 
-    public CheckGuild(SBBot plugin) {
+    public CheckGuild(LDBot plugin) {
         this.plugin = plugin;
     }
 

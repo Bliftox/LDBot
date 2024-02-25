@@ -1,16 +1,16 @@
-name: SBBot
+name: LDBot
 version: '${project.version}'
-main: org.ling.sbbot.main.SBBot
+main: org.ling.ldbot.main.LDBot
 api-version: '1.20'
 
 commands:
-  sbbot:
+  ldbot:
     description: "general command"
-    permission: "sbbot.*"
+    permission: "ldbot.*"
     aliases: []
     children:
-      sbbot.reload: true
+      ldbot.reload: true
 
 permissions:
-  sbbot.reload:
+  ldbot.reload:
     default: op

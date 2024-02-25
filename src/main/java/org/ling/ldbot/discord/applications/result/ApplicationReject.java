@@ -1,4 +1,4 @@
-package org.ling.sbbot.discord.applications.result;
+package org.ling.ldbot.discord.applications.result;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.UserSnowflake;
@@ -8,17 +8,17 @@ import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import org.ling.sbbot.discord.applications.Application;
-import org.ling.sbbot.main.SBBot;
+import org.ling.ldbot.discord.applications.Application;
+import org.ling.ldbot.main.LDBot;
 
 import java.awt.*;
 import java.time.Instant;
 import java.util.Objects;
 
 public class ApplicationReject extends ListenerAdapter {
-    private final SBBot plugin;
+    private final LDBot plugin;
 
-    public ApplicationReject(SBBot plugin) {
+    public ApplicationReject(LDBot plugin) {
         this.plugin = plugin;
     }
 
@@ -40,7 +40,7 @@ public class ApplicationReject extends ListenerAdapter {
             manageRoles(event, id);
 
             //event.getMessage().delete().queue();
-            Bukkit.getLogger().info("[SBBot] The application from " + event.getGuild().getMemberById(id).getEffectiveName() + " has been successfully rejected.");
+            Bukkit.getLogger().info("[LDBot] The application from " + event.getGuild().getMemberById(id).getEffectiveName() + " has been successfully rejected.");
         }
     }
 

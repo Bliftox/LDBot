@@ -1,19 +1,19 @@
-package org.ling.sbbot.minecraft.commands;
+package org.ling.ldbot.minecraft.commands;
 
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.ling.sbbot.main.SBBot;
+import org.ling.ldbot.main.LDBot;
 
 import java.util.List;
 
 public class MinecraftReloadCommand extends AbstractCommands{
 
-    private final SBBot plugin;
+    private final LDBot plugin;
 
-    public MinecraftReloadCommand(SBBot plugin) {
-        super("sbbot");
+    public MinecraftReloadCommand(LDBot plugin) {
+        super("ldbot");
         this.plugin = plugin;
     }
 
@@ -23,18 +23,18 @@ public class MinecraftReloadCommand extends AbstractCommands{
 
         if (args[0].equals("reload")) {
             // Проверяет есть ли права у пользователя
-            if (!sender.hasPermission("sbbot.reload")) {
+            if (!sender.hasPermission("ldbot.reload")) {
                 sender.sendMessage(ChatColor.RED + "Unknown command. Try /help for a list of commands.\n");
                 return;
             }
 
             // Перезагрузка плагина
             plugin.getJda().shutdown();
-            SBBot.getInstance().reloadConfig();
+            LDBot.getInstance().reloadConfig();
             Bukkit.getScheduler().cancelTasks(plugin);
             plugin.startBot();
 
-            sender.sendMessage(ChatColor.GREEN + "[SBBot] Успешная перезагрузка плагина!");
+            sender.sendMessage(ChatColor.GREEN + "[LDBot] Успешная перезагрузка плагина!");
             return;
         }
 
