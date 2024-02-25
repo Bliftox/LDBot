@@ -64,18 +64,26 @@ public class ApplicationReject extends ListenerAdapter {
 
     private void manageRoles(ButtonInteractionEvent event, String id) {
         plugin.getConfig().getStringList("applications.addRejectRolesIds").forEach(roleId -> {
-            try {
-                event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
-            } catch (HierarchyException e) {
-                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            if (roleId != null && !roleId.isEmpty()) {
+                try {
+                    event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
+                } catch (HierarchyException e) {
+                    Bukkit.getLogger().warning("Cannot change user role higher than bot");
+                }
+            } else {
+                Bukkit.getLogger().warning("Role ID is null or empty. Skipping role assignment.");
             }
         });
 
         plugin.getConfig().getStringList("applications.removeRejectRolesIds").forEach(roleId -> {
-            try {
-                event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
-            } catch (HierarchyException e) {
-                Bukkit.getLogger().warning("Cannot change user role higher than bot");
+            if (roleId != null && !roleId.isEmpty()) {
+                try {
+                    event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
+                } catch (HierarchyException e) {
+                    Bukkit.getLogger().warning("Cannot change user role higher than bot");
+                }
+            } else {
+                Bukkit.getLogger().warning("Role ID is null or empty. Skipping role removal.");
             }
         });
     }
