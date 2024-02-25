@@ -31,7 +31,7 @@ public class MinecraftReloadCommand extends AbstractCommands{
             // Перезагрузка плагина
             plugin.getJda().shutdown();
             SBBot.getInstance().reloadConfig();
-            Bukkit.getScheduler().cancelTasks(SBBot.getInstance());
+            Bukkit.getScheduler().cancelTasks(plugin);
             plugin.startBot();
 
             sender.sendMessage(ChatColor.GREEN + "[SBBot] Успешная перезагрузка плагина!");

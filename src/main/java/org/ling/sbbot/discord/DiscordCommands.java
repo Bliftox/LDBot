@@ -33,6 +33,7 @@ public class DiscordCommands extends ListenerAdapter {
 
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
+
         List<CommandData> commandDataList = new ArrayList<>();
         commandDataList.add(Commands.slash(getSuggestCommandId(), "Create a suggestion"));
 
@@ -44,5 +45,8 @@ public class DiscordCommands extends ListenerAdapter {
         for (CommandData commandData : commandDataList) {
             plugin.getJda().upsertCommand(commandData).queue();
         }
+
+
+
     }
 }

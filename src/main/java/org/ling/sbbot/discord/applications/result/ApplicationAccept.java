@@ -13,6 +13,7 @@ import org.ling.sbbot.main.SBBot;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.Objects;
 
 public class ApplicationAccept extends ListenerAdapter {
     private final SBBot plugin;
@@ -24,6 +25,12 @@ public class ApplicationAccept extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getButton().getLabel().equals(Application.getButtonAcceptLabel())) {
+
+            if (Objects.equals(plugin.getConfig().getString("applications.acceptChannelId"), null) || plugin.getConfig().getString("applications.acceptChannelId").isEmpty()) {
+                Bukkit.getLogger().warning("The value for [applications.acceptChannelId] is incorrect.");
+                return;
+            }
+
             final String id = event.getButton().getId();
             TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.acceptChannelId"));
 

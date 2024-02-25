@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ling.sbbot.discord.CheckGuild;
 import org.ling.sbbot.discord.DiscordCommands;
 import org.ling.sbbot.discord.applications.Application;
 import org.ling.sbbot.discord.applications.result.ApplicationAccept;
@@ -57,6 +58,7 @@ public final class SBBot extends JavaPlugin {
                     .addEventListeners(new Application(this))
                     .addEventListeners(new ApplicationAccept(this))
                     .addEventListeners(new ApplicationReject(this))
+                    .addEventListeners(new CheckGuild(this))
                     // .addEventListeners(new GlobalChat(this))
                     .build();
         } catch (IllegalArgumentException e) {

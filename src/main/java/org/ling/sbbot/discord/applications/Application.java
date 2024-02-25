@@ -22,6 +22,7 @@ import org.ling.sbbot.main.SBBot;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.Objects;
 
 public class Application extends ListenerAdapter {
 
@@ -82,42 +83,44 @@ public class Application extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getComponentId().equals(getResumeButtonId())) {
+            if (plugin.getConfig().getBoolean("applications.applicationsEnable")) {
 
-            TextInput fieldOne = TextInput.create(getFieldOneId(), "[🎗️] Ваш ник в игре", TextInputStyle.SHORT)
-                    .setRequired(true)
-                    .setMaxLength(16)
-                    .build();
+                TextInput fieldOne = TextInput.create(getFieldOneId(), "[🎗️] Ваш ник в игре", TextInputStyle.SHORT)
+                        .setRequired(true)
+                        .setMaxLength(16)
+                        .build();
 
-            TextInput fieldTwo = TextInput.create(getFieldTwoId(), "[🎨] Сколько вам лет?", TextInputStyle.SHORT)
-                    .setRequired(true)
-                    .setMaxLength(2)
-                    .build();
+                TextInput fieldTwo = TextInput.create(getFieldTwoId(), "[🎨] Сколько вам лет?", TextInputStyle.SHORT)
+                        .setRequired(true)
+                        .setMaxLength(2)
+                        .build();
 
-            TextInput fieldThree = TextInput.create(getFieldThreeId(), "[📜] Немного о себе", TextInputStyle.PARAGRAPH)
-                    .setRequired(true)
-                    .setMaxLength(500)
-                    .build();
+                TextInput fieldThree = TextInput.create(getFieldThreeId(), "[📜] Немного о себе", TextInputStyle.PARAGRAPH)
+                        .setRequired(true)
+                        .setMaxLength(500)
+                        .build();
 
-            TextInput fieldFour = TextInput.create(getFieldFourId(), "[🍄] Почему именно на сервер?", TextInputStyle.PARAGRAPH)
-                    .setRequired(true)
-                    .setMaxLength(150)
-                    .build();
+                TextInput fieldFour = TextInput.create(getFieldFourId(), "[🍄] Почему именно на сервер?", TextInputStyle.PARAGRAPH)
+                        .setRequired(true)
+                        .setMaxLength(150)
+                        .build();
 
-            TextInput fieldFive = TextInput.create(getFieldFiveId(), "[⚠️] Любите играть с читами?", TextInputStyle.SHORT)
-                    .setRequired(true)
-                    .setMaxLength(50)
-                    .build();
+                TextInput fieldFive = TextInput.create(getFieldFiveId(), "[⚠️] Любите играть с читами?", TextInputStyle.SHORT)
+                        .setRequired(true)
+                        .setMaxLength(50)
+                        .build();
 
-            Modal applicationModal = Modal.create(getApplicationModalId(), "[🐸] Заявка на сервер")
-                    .addActionRows(
-                            ActionRow.of(fieldOne),
-                            ActionRow.of(fieldTwo),
-                            ActionRow.of(fieldThree),
-                            ActionRow.of(fieldFour),
-                            ActionRow.of(fieldFive))
-                    .build();
+                Modal applicationModal = Modal.create(getApplicationModalId(), "[🐸] Заявка на сервер")
+                        .addActionRows(
+                                ActionRow.of(fieldOne),
+                                ActionRow.of(fieldTwo),
+                                ActionRow.of(fieldThree),
+                                ActionRow.of(fieldFour),
+                                ActionRow.of(fieldFive))
+                        .build();
 
-            event.replyModal(applicationModal).queue();
+                event.replyModal(applicationModal).queue();
+            } else event.reply("⚠️ На данный момент заявки на данном сервере прекращены").setEphemeral(true).queue();
         }
     }
 
@@ -125,6 +128,11 @@ public class Application extends ListenerAdapter {
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
         if (event.getModalId().equals(getApplicationModalId())) {
+
+            if (Objects.equals(plugin.getConfig().getString("applications.channelId"), null) || plugin.getConfig().getString("applications.channelId").isEmpty()) {
+                Bukkit.getLogger().warning("The value for [applications.channelId] is incorrect.");
+                return;
+            }
 
             EmbedBuilder applicationEmbed = new EmbedBuilder()
 
@@ -146,6 +154,7 @@ public class Application extends ListenerAdapter {
                     .setColor(Color.decode("#ff9933"))
                     .setImage("https://cdn.discordapp.com/attachments/890237163151695892/1210709512693223465/-27-12-2023.png?ex=65eb8c19&is=65d91719&hm=86049861ffecbe6ed389859e3faf5d37e9d2a103c5eafd824255c7f8fe457586&")
                     .setTimestamp(Instant.now());
+
 
             TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.channelId"));
 
