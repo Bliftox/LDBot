@@ -43,6 +43,13 @@ public class Suggest extends ListenerAdapter {
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (event.getName().equals(DiscordCommands.getSuggestCommandId())) {
 
+            plugin.getConfig().getStringList("suggest.suggestRoles").forEach(roleId -> {
+                if (!event.getMember().getRoles().equals(roleId)) {
+                    event.reply("⛔ Недостаточно прав!").setEphemeral(true).queue();
+                    return;
+                }
+            });
+
             TextInput suggestTitle = TextInput.create(getSuggestTitleId(), "[📌] Заголовок предложения", TextInputStyle.SHORT)
                     .setRequired(true)
                     .setMaxLength(25)
@@ -67,7 +74,7 @@ public class Suggest extends ListenerAdapter {
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
         if (event.getModalId().equals(getSuggestModalId())) {
 
-            TextChannel suggestChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("suggestChannelId"));
+            TextChannel suggestChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("suggest.suggestChannelId"));
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTimestamp(Instant.now())

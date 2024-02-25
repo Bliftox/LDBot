@@ -11,7 +11,6 @@ import org.ling.sbbot.discord.DiscordCommands;
 import org.ling.sbbot.discord.applications.Application;
 import org.ling.sbbot.discord.applications.result.ApplicationAccept;
 import org.ling.sbbot.discord.applications.result.ApplicationReject;
-import org.ling.sbbot.discord.globalchat.GlobalChat;
 import org.ling.sbbot.discord.suggest.Suggest;
 import org.ling.sbbot.minecraft.commands.MinecraftReloadCommand;
 

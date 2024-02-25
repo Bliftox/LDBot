@@ -1,6 +1,7 @@
 package org.ling.sbbot.discord.applications;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -61,15 +62,21 @@ public class Application extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (event.getName().equals(DiscordCommands.getResumeCommandId())) {
+            EmbedBuilder resumeBuilder = new EmbedBuilder()
+                    .setTitle("📄 Заявки на сервер")
+                    .setDescription("- Чтобы подать заявку на сервер, нажмите\n на кнопку ниже и заполните заявку по форме.")
+                    .setColor(Color.decode("#ffcc00"))
+                    .setImage("https://cdn.discordapp.com/attachments/1197957820562296895/1211049362566684772/f5f8879f0c89bfef5317d29abc54b41c.png?ex=65ecc89c&is=65da539c&hm=07310e9c16495a612f63e68836a8bd9242f111806a9af26fecb12419b775aa39&");
 
             TextChannel textChannel = event.getChannel().asTextChannel();
 
-            textChannel.sendMessage("gfdggggggggg").addActionRow(Button.of(
-                    ButtonStyle.DANGER, getResumeButtonId(), "gjjb", Emoji.fromUnicode("🍄")))
+            textChannel.sendMessage("").setEmbeds(resumeBuilder.build()).addActionRow(Button.of(
+                            ButtonStyle.DANGER, getResumeButtonId(), "Подать", Emoji.fromUnicode("🍄")))
                     .queue();
 
-            event.reply("Успешно").setEphemeral(true).queue();
+            event.reply("✅ Успешное создание резюме").setEphemeral(true).queue();
         }
+
     }
 
     @Override
@@ -91,7 +98,7 @@ public class Application extends ListenerAdapter {
                     .setMaxLength(500)
                     .build();
 
-            TextInput fieldFour = TextInput.create(getFieldFourId(), "[🍄] Почему именно на сервер?", TextInputStyle.SHORT)
+            TextInput fieldFour = TextInput.create(getFieldFourId(), "[🍄] Почему именно на сервер?", TextInputStyle.PARAGRAPH)
                     .setRequired(true)
                     .setMaxLength(150)
                     .build();
@@ -165,6 +172,6 @@ public class Application extends ListenerAdapter {
     }
 
     public static final String getButtonRejectLabel() {
-        return "Отклонить";
+        return "Отказать";
     }
 }
