@@ -81,18 +81,33 @@ public class Suggest extends ListenerAdapter {
                     .setTitle("[💡] Предложение от - " + event.getUser().getName())
                     .setDescription(event.getValue(getSuggestTitleId()).getAsString() + "\n```text\n" + event.getValue(getSuggestTextId()).getAsString() + "\n```");
 
+            try {
+                suggestChannel.sendMessage("").setEmbeds(embedBuilder.build()).queue(message -> {
+                    // Добавление реакции к сообщению
+                    message.createThreadChannel("Обсуждение: " + event.getValue(getSuggestTitleId()).getAsString()).queue();
+                    message.addReaction(Emoji.fromUnicode("👍")).queue();
+                    message.addReaction(Emoji.fromUnicode("👎")).queue();
+                }, throwable -> {
+                    // Обработка ошибки, если что-то пошло не так
+                    throwable.printStackTrace();
+                });
+                } catch (NullPointerException e) {
+                    Bukkit.getLogger().warning("It's impossible to send the suggest, because the channel doesn't exist.");
+                }
 
-            suggestChannel.sendMessage("").setEmbeds(embedBuilder.build()).queue(message -> {
-                // Добавление реакции к сообщению
-                message.createThreadChannel("Обсуждение: " + event.getValue(getSuggestTitleId()).getAsString()).queue();
-                message.addReaction(Emoji.fromUnicode("👍")).queue();
-                message.addReaction(Emoji.fromUnicode("👎")).queue();
-            }, throwable -> {
-                // Обработка ошибки, если что-то пошло не так
-                throwable.printStackTrace();
-            });
 
             event.reply("✅ Успешно отправлено!").setEphemeral(true).queue();
         }
+    }
+
+    private String getNotificationRoleId() {
+        String role =
+                plugin.getConfig().getString("suggests.notificationRoleId") == null &&
+                        plugin.getConfig().getString("suggests.notificationRoleId").isEmpty() ?
+                        ""
+                        :
+                        " <@&" + plugin.getConfig().getString("suggests.notificationRoleId") + "> ";
+
+        return role;
     }
 }

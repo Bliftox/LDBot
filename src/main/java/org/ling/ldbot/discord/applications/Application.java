@@ -155,14 +155,21 @@ public class Application extends ListenerAdapter {
                     .setTimestamp(Instant.now());
 
 
-            TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.channelId"));
 
-            textChannel.sendMessage("<@959296276279726130>   " + "<@" + event.getUser().getId() + "> " + event.getUser().getName() + " " + event.getUser().getGlobalName())
-                    .setEmbeds(applicationEmbed.build())
-                    .addActionRow(
-                            Button.of(ButtonStyle.SUCCESS, event.getUser().getId(), getButtonAcceptLabel(), Emoji.fromUnicode("✅")),
-                            Button.of(ButtonStyle.DANGER, String.valueOf(event.getUser().getIdLong() + 1), getButtonRejectLabel(), Emoji.fromUnicode("⛔")))
-                    .queue();
+
+            try {
+                TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.channelId"));
+
+                textChannel.sendMessage(getNotificationRoleId() + " <@" + event.getUser().getId() + "> " + event.getUser().getName() + " " + event.getUser().getGlobalName())
+                        .setEmbeds(applicationEmbed.build())
+                        .addActionRow(
+                                Button.of(ButtonStyle.SUCCESS, event.getUser().getId(), getButtonAcceptLabel(), Emoji.fromUnicode("✅")),
+                                Button.of(ButtonStyle.DANGER, String.valueOf(event.getUser().getIdLong() + 1), getButtonRejectLabel(), Emoji.fromUnicode("⛔")))
+                        .queue();
+            } catch (NullPointerException e) {
+                Bukkit.getLogger().warning("It's impossible to send the application because the channel doesn't exist.");
+            }
+
 
             try {
                 event.getMember().modifyNickname(event.getValue(getFieldOneId()).getAsString()).queue();
@@ -177,6 +184,17 @@ public class Application extends ListenerAdapter {
 
     public static final String getButtonAcceptLabel() {
         return "Принять";
+    }
+
+    private String getNotificationRoleId() {
+        String role =
+                plugin.getConfig().getString("applications.notificationRoleId") == null &&
+                plugin.getConfig().getString("applications.notificationRoleId").isEmpty() ?
+                        ""
+                        :
+                        " <@&" + plugin.getConfig().getString("applications.notificationRoleId") + "> ";
+
+        return role;
     }
 
     public static final String getButtonRejectLabel() {

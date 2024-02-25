@@ -27,7 +27,6 @@ public class ApplicationAccept extends ListenerAdapter {
         if (event.getButton().getLabel().equals(Application.getButtonAcceptLabel())) {
 
             if (Objects.equals(plugin.getConfig().getString("applications.acceptChannelId"), null) || plugin.getConfig().getString("applications.acceptChannelId").isEmpty()) {
-                Bukkit.getLogger().warning("The value for [applications.acceptChannelId] is incorrect.");
                 return;
             }
 
@@ -50,7 +49,13 @@ public class ApplicationAccept extends ListenerAdapter {
                 .setColor(Color.decode("#00e600"))
                 .setTitle("✅ Принят")
                 .setTimestamp(Instant.now());
-        textChannel.sendMessage("<@" + id + ">").setEmbeds(acceptEmbed.build()).queue();
+
+        try {
+            textChannel.sendMessage("<@" + id + ">").setEmbeds(acceptEmbed.build()).queue();
+        } catch (NullPointerException e) {
+            Bukkit.getLogger().warning("It's impossible to send the accept notification, because the channel doesn't exist.");
+        }
+
     }
 
     private void whitelistPlayer(String id) {
@@ -78,9 +83,11 @@ public class ApplicationAccept extends ListenerAdapter {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
                 } catch (HierarchyException e) {
                     Bukkit.getLogger().warning("Cannot change user role higher than bot");
+                } catch (NullPointerException e) {
+                    Bukkit.getLogger().warning("Cannot change user role higher than bot");
                 }
             } else {
-                Bukkit.getLogger().warning("Role ID is null or empty. Skipping role assignment.");
+                return;
             }
         });
 
@@ -90,9 +97,11 @@ public class ApplicationAccept extends ListenerAdapter {
                     event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
                 } catch (HierarchyException e) {
                     Bukkit.getLogger().warning("Cannot change user role higher than bot");
+                } catch (NullPointerException e) {
+                    Bukkit.getLogger().warning("Cannot change user role higher than bot");
                 }
             } else {
-                Bukkit.getLogger().warning("Role ID is null or empty. Skipping role removal.");
+                return;
             }
         });
     }

@@ -27,7 +27,6 @@ public class ApplicationReject extends ListenerAdapter {
         if (event.getButton().getLabel().equals(Application.getButtonRejectLabel())) {
 
             if (Objects.equals(plugin.getConfig().getString("applications.rejectChannelId"), null) || plugin.getConfig().getString("applications.rejectChannelId").isEmpty()) {
-                Bukkit.getLogger().warning("The value for [applications.rejectChannelId] is incorrect.");
                 return;
             }
 
@@ -39,7 +38,7 @@ public class ApplicationReject extends ListenerAdapter {
             changeNickname(event, id);
             manageRoles(event, id);
 
-            //event.getMessage().delete().queue();
+            event.getMessage().delete().queue();
             Bukkit.getLogger().info("[LDBot] The application from " + event.getGuild().getMemberById(id).getEffectiveName() + " has been successfully rejected.");
         }
     }
@@ -49,7 +48,12 @@ public class ApplicationReject extends ListenerAdapter {
                 .setColor(Color.decode("#e60000"))
                 .setTitle("⛔ Отказано")
                 .setTimestamp(Instant.now());
-        textChannel.sendMessage("<@" + id + ">").setEmbeds(rejectEmbed.build()).queue();
+
+        try {
+            textChannel.sendMessage("<@" + id + ">").setEmbeds(rejectEmbed.build()).queue();
+        } catch (NullPointerException e) {
+            Bukkit.getLogger().warning("It's impossible to send the reject notification, because the channel doesn't exist.");
+        }
     }
 
     private void changeNickname(ButtonInteractionEvent event, String id) {
@@ -69,9 +73,11 @@ public class ApplicationReject extends ListenerAdapter {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
                 } catch (HierarchyException e) {
                     Bukkit.getLogger().warning("Cannot change user role higher than bot");
+                } catch (NullPointerException e) {
+                    Bukkit.getLogger().warning("Cannot change user role higher than bot");
                 }
             } else {
-                Bukkit.getLogger().warning("Role ID is null or empty. Skipping role assignment.");
+                return;
             }
         });
 
@@ -81,9 +87,11 @@ public class ApplicationReject extends ListenerAdapter {
                     event.getGuild().removeRoleFromMember(UserSnowflake.fromId(id), event.getGuild().getRoleById(roleId)).queue();
                 } catch (HierarchyException e) {
                     Bukkit.getLogger().warning("Cannot change user role higher than bot");
+                } catch (NullPointerException e) {
+                    Bukkit.getLogger().warning("Cannot change user role higher than bot");
                 }
             } else {
-                Bukkit.getLogger().warning("Role ID is null or empty. Skipping role removal.");
+                return;
             }
         });
     }
