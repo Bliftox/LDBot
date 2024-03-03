@@ -3,6 +3,7 @@ package org.ling.ldbot.discord.applications;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -173,7 +174,9 @@ public class Application extends ListenerAdapter {
             try {
                 TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.channelId"));
 
-                textChannel.sendMessage(plugin.getJda().getRoleById(plugin.getConfig().getString("applications.notificationRoleId")).getAsMention() + event.getUser().getAsMention() + event.getUser().getName() + " " + event.getUser().getGlobalName())
+                String roleId = plugin.getConfig().getString("applications.notificationRoleId");
+
+                textChannel.sendMessage((roleId != null && !roleId.isEmpty() ? plugin.getJda().getRoleById(roleId).getAsMention() : "") + event.getUser().getAsMention() + event.getUser().getName() + " " + event.getUser().getGlobalName())
                         .setEmbeds(applicationEmbed.build())
                         .addActionRow(
                                 Button.of(ButtonStyle.SUCCESS, BUTTON_ACCEPT_ID, BUTTON_ACCEPT_LABEL, Emoji.fromUnicode("✅")),
@@ -195,13 +198,15 @@ public class Application extends ListenerAdapter {
                                 throw new RuntimeException(e);
                             }
                         });
+
+                event.reply("✅ Успешно создано!").setEphemeral(true).queue();
             } catch (NullPointerException e) {
                 Bukkit.getLogger().warning("It's impossible to send the application because the channel doesn't exist.");
             }
 
 
 
-            event.reply("✅ Успешно создано!").setEphemeral(true).queue();
+
         }
     }
 
