@@ -5,13 +5,20 @@
 #
 
 
+database:
+  host: localhost # host of your database
+  port: 3306 # default port for MariaDB and MySQL
+  database: DataBase # name of your database. A database server can contain multiple databases
+  user: username
+  password: passy
+
 
 # Токен дискорд бота
-token: "MTIxMDU3MTc3MjY1NTgzNzIyNg.GYOSAV.22ex6khM6MgLVOFTvuSkupeSkFy0PqXs2NQJGE"
+token: ""
 
 # ВАЖНО
 # Айди вашего сервера
-guildId: "1197957820562296892"
+guildId: ""
 
 # Команда /suggest вызывает окно в котором есть 2 поля для заполнения, после чего они собираются и отправляются в отдельный чат
 suggest:
@@ -31,21 +38,21 @@ applications:
   applicationsEnable: true
 
   # Чат куда будут отправляться заявки на рос смотрение
-  channelId: "1211341821041713153"
+  channelId: ""
 
   # Каналы оповещения
-  acceptChannelId: "1211341956064608348"
-  rejectChannelId: "1211341956064608348"
+  acceptChannelId: ""
+  rejectChannelId: ""
 
   # Менять ли ник игроку которого заявку приняли, на тот что он указал в заявке
   changeNickname: false
 
   # Роли, что выдаются игроку которого заявку приняли
   addAcceptRolesIds:
-    - "1209994848904548412"
+    - ""
   # Роли, что отнимаются у игрока которого заявку приняли
   removeAcceptRolesIds:
-    - "1209973851237122198"
+    - ""
 
   # Роли, что выдаются игроку которого заявку отказали
   addRejectRolesIds:

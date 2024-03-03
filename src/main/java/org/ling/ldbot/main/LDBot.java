@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ling.ldbot.discord.CheckGuild;
 import org.ling.ldbot.discord.DiscordCommands;
@@ -15,8 +17,17 @@ import org.ling.ldbot.discord.applications.result.ApplicationReject;
 import org.ling.ldbot.discord.suggest.Suggest;
 import org.ling.ldbot.minecraft.commands.MinecraftReloadCommand;
 
+import javax.xml.crypto.Data;
+import java.io.File;
+import java.sql.SQLException;
+
 public final class LDBot extends JavaPlugin {
     private JDA jda;
+    private DataBase dataBase;
+
+    public DataBase getDataBase() {
+        return dataBase;
+    }
 
     private static LDBot instance;
 
@@ -32,6 +43,16 @@ public final class LDBot extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+
+
+        try {
+            dataBase = new DataBase(getDataFolder().getAbsolutePath() + "/applications.db");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
+
+
         startBot();
         new MinecraftReloadCommand(this);
 
@@ -76,12 +97,15 @@ public final class LDBot extends JavaPlugin {
             try {
                 jda.shutdown();
                 jda.shutdownNow();
+                dataBase.closeConnection();
             } catch (NullPointerException e) {
                 Bukkit.getLogger().info("Bot can not shutdown because it already shutdown");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
     }
+
+
+
 }

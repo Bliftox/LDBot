@@ -20,8 +20,8 @@ public class DiscordReloadCommand extends ListenerAdapter {
         if (event.getName().equals(DiscordCommands.getReloadCommandId())) {
             event.reply("✅ Successfully reload Bot!").setEphemeral(true).queue();
             plugin.getJda().shutdown();
-            LDBot.getInstance().reloadConfig();
-            Bukkit.getScheduler().cancelTasks(LDBot.getInstance());
+            plugin.getInstance().reloadConfig();
+            Bukkit.getScheduler().cancelTasks(plugin.getInstance());
             plugin.startBot();
         }
     }

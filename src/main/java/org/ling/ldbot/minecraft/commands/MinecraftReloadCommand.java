@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.ling.ldbot.main.DataBase;
 import org.ling.ldbot.main.LDBot;
 
 import java.util.List;
@@ -29,12 +30,31 @@ public class MinecraftReloadCommand extends AbstractCommands{
             }
 
             // Перезагрузка плагина
-            plugin.getJda().shutdown();
+            if (plugin.getJda() != null) {
+                plugin.getJda().shutdown();
+            }
+
             LDBot.getInstance().reloadConfig();
             Bukkit.getScheduler().cancelTasks(plugin);
             plugin.startBot();
 
             sender.sendMessage(ChatColor.GREEN + "[LDBot] Успешная перезагрузка плагина!");
+            return;
+        }
+
+        if (args[0].equals("stop")) {
+            // Проверяет есть ли права у пользователя
+            if (!sender.hasPermission("ldbot.stop")) {
+                sender.sendMessage(ChatColor.RED + "Unknown command. Try /help for a list of commands.\n");
+                return;
+            }
+
+            // Перезагрузка плагина
+            if (plugin.getJda() != null) {
+                plugin.getJda().shutdown();
+            }
+
+            sender.sendMessage(ChatColor.GREEN + "[LDBot] Успешная остановка бота!");
             return;
         }
 
