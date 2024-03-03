@@ -167,7 +167,7 @@ public class Application extends ListenerAdapter {
             try {
                 TextChannel textChannel = plugin.getJda().getTextChannelById(plugin.getConfig().getString("applications.channelId"));
 
-                textChannel.sendMessage(getNotificationRoleId() + " <@" + event.getUser().getId() + "> " + event.getUser().getName() + " " + event.getUser().getGlobalName())
+                textChannel.sendMessage(plugin.getJda().getRoleById(plugin.getConfig().getString("applications.notificationRoleId")).getAsMention() + event.getUser().getAsMention() + event.getUser().getName() + " " + event.getUser().getGlobalName())
                         .setEmbeds(applicationEmbed.build())
                         .addActionRow(
                                 Button.of(ButtonStyle.SUCCESS, BUTTON_ACCEPT_ID, BUTTON_ACCEPT_LABEL, Emoji.fromUnicode("✅")),
@@ -199,14 +199,6 @@ public class Application extends ListenerAdapter {
         }
     }
 
-    private String getNotificationRoleId() {
-        String role =
-                plugin.getConfig().getString("applications.notificationRoleId") == null && plugin.getConfig().getString("applications.notificationRoleId").isEmpty() ?
-                        ""
-                        :
-                        "<@&" + plugin.getConfig().getString("applications.notificationRoleId") + "> ";
 
-        return role;
-    }
 
 }
