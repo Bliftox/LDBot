@@ -91,6 +91,12 @@ public class Application extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getComponentId().equals(RESUME_BUTTON_ID)) {
+
+            if (plugin.getDataBase().isUserInDatabase(event.getUser().getId())) {
+                event.reply("⚠️ Вы уже подали заявку!").setEphemeral(true).queue();
+                return;
+            }
+
             if (plugin.getConfig().getBoolean("applications.applicationsEnable")) {
 
                 TextInput fieldOne = TextInput.create(FIELD_ONE_ID, "[🎗️] Ваш ник в игре", TextInputStyle.SHORT)

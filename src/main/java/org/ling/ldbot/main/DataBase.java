@@ -91,4 +91,29 @@ public class DataBase {
         }
         return fieldValues;
     }
+
+    public boolean isUserInDatabase(String userId) {
+        boolean isInDatabase = false;
+        try {
+            // Подготовка запроса SQL для проверки наличия пользователя по ID
+            String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE userId = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, userId);
+
+            // Выполнение запроса и получение результата
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                isInDatabase = count > 0;
+            }
+
+            // Закрытие ресурсов
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            // Обработка ошибок
+            e.printStackTrace();
+        }
+        return isInDatabase;
+    }
 }
