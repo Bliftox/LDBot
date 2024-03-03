@@ -24,7 +24,7 @@ import java.util.Objects;
 
 public class ApplicationReject extends ListenerAdapter {
     private final LDBot plugin;
-    private static final Color REJECT_COLOR = Color.decode("#00e600");
+    private static final Color REJECT_COLOR = Color.decode("#e60000");
 
     public ApplicationReject(LDBot plugin) {
         this.plugin = plugin;
