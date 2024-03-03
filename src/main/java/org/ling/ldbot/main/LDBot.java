@@ -6,19 +6,16 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ling.ldbot.discord.CheckGuild;
 import org.ling.ldbot.discord.DiscordCommands;
 import org.ling.ldbot.discord.applications.Application;
 import org.ling.ldbot.discord.applications.result.ApplicationAccept;
 import org.ling.ldbot.discord.applications.result.ApplicationReject;
-import org.ling.ldbot.discord.suggest.Suggest;
+import org.ling.ldbot.discord.suggests.Suggest;
+import org.ling.ldbot.discord.suggests.ThreadNotification;
 import org.ling.ldbot.minecraft.commands.MinecraftReloadCommand;
 
-import javax.xml.crypto.Data;
-import java.io.File;
 import java.sql.SQLException;
 
 public final class LDBot extends JavaPlugin {
@@ -46,7 +43,7 @@ public final class LDBot extends JavaPlugin {
 
 
         try {
-            dataBase = new DataBase(getDataFolder().getAbsolutePath() + "/applications.db");
+            dataBase = new DataBase(getDataFolder().getAbsolutePath() + "/" + DataBase.getTableName() + ".db");
         } catch (SQLException e) {
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
@@ -54,6 +51,10 @@ public final class LDBot extends JavaPlugin {
 
 
         startBot();
+
+
+
+
         new MinecraftReloadCommand(this);
 
         //getServer().getPluginManager().registerEvents(new GlobalChat(this), this);
@@ -80,8 +81,10 @@ public final class LDBot extends JavaPlugin {
                     .addEventListeners(new ApplicationAccept(this))
                     .addEventListeners(new ApplicationReject(this))
                     .addEventListeners(new CheckGuild(this))
+                    .addEventListeners(new ThreadNotification(this))
                     // .addEventListeners(new GlobalChat(this))
                     .build();
+
         } catch (IllegalArgumentException e) {
             Bukkit.getLogger().warning("Change the token to yours in the config!");
         } catch (Exception e) {

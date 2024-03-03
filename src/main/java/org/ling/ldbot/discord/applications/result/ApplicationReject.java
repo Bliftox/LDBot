@@ -3,6 +3,7 @@ package org.ling.ldbot.discord.applications.result;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -24,19 +25,27 @@ import java.util.Objects;
 
 public class ApplicationReject extends ListenerAdapter {
     private final LDBot plugin;
-    private static final Color REJECT_COLOR = Color.decode("#e60000");
+    private static final Color REJECT_COLOR = Color.decode("#ff4d4d");
 
     public ApplicationReject(LDBot plugin) {
         this.plugin = plugin;
     }
 
+    private TextChannel textChannel;
+
+    @Override
+    public void onGuildReady(@NotNull GuildReadyEvent event) {
+        String rejectChannelId = plugin.getConfig().getString("applications.rejectChannelId");
+        if (rejectChannelId == null || rejectChannelId.isEmpty()) {
+            return;
+        }
+        textChannel = plugin.getJda().getTextChannelById(rejectChannelId);
+    }
+
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getButton().getId().equals(Application.getButtonRejectId())) {
-            String rejectChannelId = plugin.getConfig().getString("applications.rejectChannelId");
-            if (rejectChannelId == null || rejectChannelId.isEmpty()) {
-                return;
-            }
+
 
             String id;
             try {
@@ -45,7 +54,6 @@ public class ApplicationReject extends ListenerAdapter {
                 throw new RuntimeException(e);
             }
 
-            TextChannel textChannel = plugin.getJda().getTextChannelById(rejectChannelId);
             if (textChannel != null) {
                 sendMessageAndEmbed(event, id, textChannel);
             } else {

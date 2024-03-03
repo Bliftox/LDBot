@@ -3,6 +3,7 @@ package org.ling.ldbot.discord.applications.result;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -24,22 +25,30 @@ import java.util.Objects;
 
 public class ApplicationAccept extends ListenerAdapter {
     private final LDBot plugin;
-    private static final Color ACCEPT_COLOR = Color.decode("#00e600");
+    private static final Color ACCEPT_COLOR = Color.decode("#66ff66");
 
     public ApplicationAccept(LDBot plugin) {
         this.plugin = plugin;
     }
 
+    private TextChannel textChannel;
+
+    @Override
+    public void onGuildReady(@NotNull GuildReadyEvent event) {
+        String acceptChannelId = plugin.getConfig().getString("applications.acceptChannelId");
+        if (acceptChannelId == null || acceptChannelId.isEmpty()) {
+            return;
+        }
+        textChannel = plugin.getJda().getTextChannelById(acceptChannelId);
+
+    }
+
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getButton().getId().equals(Application.getButtonAcceptId())) {
-            String acceptChannelId = plugin.getConfig().getString("applications.acceptChannelId");
-            if (acceptChannelId == null || acceptChannelId.isEmpty()) {
-                return;
-            }
-
             String id;
             String nickname;
+
             try {
                 id = plugin.getDataBase().getApplicationUserId(event.getMessageId());
                 nickname = plugin.getDataBase().getFieldsValue(event.getMessageId()).get(0);
@@ -47,7 +56,6 @@ public class ApplicationAccept extends ListenerAdapter {
                 throw new RuntimeException(e);
             }
 
-            TextChannel textChannel = plugin.getJda().getTextChannelById(acceptChannelId);
             if (textChannel != null) {
                 sendMessageAndEmbed(event, id, textChannel);
             } else {

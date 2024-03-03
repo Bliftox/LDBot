@@ -9,7 +9,11 @@ import java.util.List;
 public class DataBase {
 
     private final Connection connection;
-    private final String tableName = "applications";
+    private static final String tableName = "database";
+
+    public static String getTableName() {
+        return tableName;
+    }
 
     public DataBase(String path) throws SQLException {
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
